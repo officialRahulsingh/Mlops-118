@@ -33,7 +33,7 @@ jobs:
       steps:
         - name: Mock - SSH into EC2 and redeploy
           run: |
-            echo "docker pull house-preiction-model"
+            echo "docker pull house-prediction-model"
             echo "docker stop"
             echo "docker rm"
             echo "docker run"

@@ -23,9 +23,9 @@ df_clean.to_csv(clean_path,index=False)
 
 # upload to s3 as proccessed version
 s3=boto3.client('s3')
-BUCKET="mlops-house-prediction"
+BUCKET="mlops-house-prediction2"
 def upload_proccessed_data(local_path):
-    key=f"proccessed/{date.today()}/Mlops_house_predication_clean_v1.csv"
+    key=f"processed/{date.today()}/Mlops_house_predication_clean_v1.csv"
     s3.upload_file(local_path,BUCKET,key)
     print(f"\nUploaded to s3://{BUCKET}/{key}")
     return key
