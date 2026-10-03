@@ -1,40 +1,78 @@
-name : Mock Deploy Pipeline (Test)
+name: Deploy House Price MLOps
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
-    mock-build:
-      runs-on: ubuntu-latest
-      outputs:
-        image: ${{steps.build.outputs.image}}
-      steps:
-        - name: Checkout Code
-          uses: actions/checkout@v4
+  build-and-deploy:
 
-        - name: Mock - Configure AWS credentials
-          run: echo "aws-configuration Test"
+    runs-on: ubuntu-latest
 
-        - name: Mock - Login to Docker
-          run: echo "Docker login"
+    steps:
 
-        - name: Mock - Build Docker Image
-          run : echo "Docker build"
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Mock - Push image to ECR
-          id : build
-          run : echo "Docker push"
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    mock-deploy:
-      needs: mock-build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Mock - SSH into EC2 and redeploy
-          run: |
-            echo "docker pull house-prediction-model"
-            echo "docker stop"
-            echo "docker rm"
-            echo "docker run"
-            echo "Public ip : 56.7.7.7:8000"
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t rahulsinghdocker1998/house-price-api:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push rahulsinghdocker1998/house-price-api:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+
+            docker pull rahulsinghdocker1998/house-price-api:latest
+
+            docker stop house-price-api || true
+            docker rm house-price-api || true
+
+            docker run -d \
+              --name house-price-api \
+              -p 8000:8000 \
+              -e MLFLOW_TRACKING_URI=http://3.229.3.201:5000 \
+              --restart unless-stopped \
+              rahulsinghdocker1998/house-price-api:latest
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t rahulsinghdocker1998/house-price-api:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push rahulsinghdocker1998/house-price-api:latest
