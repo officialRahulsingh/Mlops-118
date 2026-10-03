@@ -11,10 +11,10 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Copy requirements file
-COPY requirement.txt .
+COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirement.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy FastAPI application
 COPY serve.py .

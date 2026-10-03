@@ -3,7 +3,7 @@ import boto3
 from datetime import date
 
 # load raw csv from local resource
-path=r"C:\Users\dev\Downloads\Mlops_house_predication_raw_data.csv"
+path=r"C:\Users\hp\Downloads\Telegram Desktop\Mlops_house_predication_raw_data.csv"
 data=pd.read_csv(path)
 df=pd.DataFrame(data)
 
@@ -18,7 +18,7 @@ print(df_clean.isnull().sum())
 print(f"Shape After : {df_clean.shape}")
 
 # saved cleaned CSV locally
-clean_path=r"C:\Users\dev\Downloads\Mlops_house_predication_clean_v2.csv"
+clean_path=r"C:\Users\hp\Downloads\Telegram Desktop\Mlops_house_predication_clean_v1.csv"
 df_clean.to_csv(clean_path,index=False)
 
 # upload to s3 as proccessed version

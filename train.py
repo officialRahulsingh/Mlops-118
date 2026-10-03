@@ -19,7 +19,7 @@ import joblib
 s3 = boto3.client("s3")
 
 BUCKET = "mlops-house-prediction2"
-KEY = "processed/2026-09-30/Mlops_house_prediction_clean_v1.csv"
+KEY = "processed/2026-10-03/Mlops_house_predication_clean_v1.csv"
 
 
 # =========================
