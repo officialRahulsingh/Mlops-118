@@ -48,7 +48,7 @@ jobs:
               -p 8000:8000 \
               -e MLFLOW_TRACKING_URI=http://3.229.3.201:5000 \
               --restart unless-stopped \
-              rahulsinghdocker1998/house-price-api:latest
+              rahulsinghdocker1998/house-price-api:latestname: Build and Push Docker Image
 
 on:
   push:
